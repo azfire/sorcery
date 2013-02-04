@@ -154,7 +154,10 @@ module Sorcery
             attrs = {}
             user_info_mapping.each do |k,v|
               if (varr = v.split("/")).size > 1
-                attribute_value = varr.inject(user_hash[:user_info]) {|hash, value| hash[value]} rescue nil
+                attribute_value = varr.inject(user_hash[:user_info]) do |hash, value| 
+                  value = value.to_i.to_s == value ? value.to_i : value
+                  hash[value]
+                end rescue nil
                 attribute_value.nil? ? attrs : attrs.merge!(k => attribute_value)
               else
                 attrs.merge!(k => user_hash[:user_info][v])
